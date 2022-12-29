@@ -36,3 +36,14 @@ jobs:
         with:
           push: true
           tags: sivaeastus.azurecr.io/${{ env.IMAGE_NAME }}:1.0.0
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set the kube context
+        uses: azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          resource-group: k8s-production
+          cluster-name: foundation-production
+        id: login
+    

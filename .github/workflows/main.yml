@@ -38,7 +38,7 @@ jobs:
         with:
           tags: bcapp.jfrog.io/foundations-app-docker-local/${{ env.IMAGE_NAME }}:1.0.0
       
-      - run: jf docker push 1.0.0 bcapp.jfrog.io/foundations-app-docker-local/${{ env.IMAGE_NAME }}
+      - run: jf docker push bcapp.jfrog.io/foundations-app-docker-local/${{ env.IMAGE_NAME }}:1.0.0
          
  
   deployment:

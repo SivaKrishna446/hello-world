@@ -47,6 +47,7 @@ jobs:
       - run: |
          jf rt ping
          
+ 
   deployment:
     runs-on: ubuntu-latest
     steps:

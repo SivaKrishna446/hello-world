@@ -36,6 +36,17 @@ jobs:
         with:
           push: true
           tags: sivaeastus.azurecr.io/${{ env.IMAGE_NAME }}:1.0.0
+      
+      - uses: jfrog/setup-jfrog-cli@v3
+      
+      - uses: jfrog/setup-jfrog-cli@v3
+        env:
+         JF_URL: ${{ secrets.JF_URL }}
+         JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+      
+      - run: |
+         jf rt ping
+         
   deployment:
     runs-on: ubuntu-latest
     steps:

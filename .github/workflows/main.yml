@@ -36,9 +36,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          tags: bcapp.jfrog.io/foundations-app-docker-local/${{ env.IMAGE_NAME }}:1.0.0
+          tags: bcapp.jfrog.io/foundations-app-docker-local/${{ env.IMAGE_NAME }}:latest
       
-      - run: jf docker push bcapp.jfrog.io/foundations-app-docker-local/${{ env.IMAGE_NAME }}:1.0.0
+      - run: jf docker push bcapp.jfrog.io/foundations-app-docker-local/${{ env.IMAGE_NAME }}:latest
          
  
   deployment:

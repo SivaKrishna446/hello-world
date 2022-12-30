@@ -32,14 +32,13 @@ jobs:
         env:
          JF_URL: https://bcapp.jfrog.io
          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-      
-      - run: jf rt docker-push 1.0.0 bcapp.jfrog.io/foundations-app-docker-local/${{ env.IMAGE_NAME }}
        
-#       - name: Build and push
-#         uses: docker/build-push-action@v3
-#         with:
-#           push: true
-#           tags: bcapp.jfrog.io/foundations-app-docker-local/${{ env.IMAGE_NAME }}:1.0.0
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          tags: bcapp.jfrog.io/foundations-app-docker-local/${{ env.IMAGE_NAME }}:1.0.0
+      
+      - run: jf docker push 1.0.0 bcapp.jfrog.io/foundations-app-docker-local/${{ env.IMAGE_NAME }}
          
  
   deployment:

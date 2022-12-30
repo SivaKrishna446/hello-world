@@ -39,11 +39,17 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     steps:
+#       - name: Set the kube context
+#         uses: azure/aks-set-context@v1
+#         with:
+#           creds: ${{ secrets.AZURE_CREDENTIALS }}
+#           resource-group: k8s-production
+#           cluster-name: foundation-production
+#         id: login
       - name: Set the kube context
-        uses: azure/aks-set-context@v1
+        uses: azure/k8s-set-context@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          resource-group: k8s-production
-          cluster-name: foundation-production
-        id: login
-    
+          method: kubeconfig
+          kubeconfig: ${{secrets.KUBE_CONFIG}}
+          context: foundation-production-admin
+        id: setcontext

@@ -53,7 +53,7 @@ jobs:
           kubeconfig: ${{secrets.KUBE_CONFIG}}
           context: foundation-production-admin
         id: setcontext
-        
+      - uses: azure/setup-kubectl@v2.0
       - name: Get the pods
         run: |
           "kubectl get pods -A"

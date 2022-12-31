@@ -66,7 +66,11 @@ jobs:
           secret-name: artifactory-image-pull-secret
         id: create-secret
         
-      - uses: Azure/k8s-deploy@v4
+      - name: Checkout the repo
+        uses: actions/checkout@v3
+        
+      - name: Deploy to Kubernetes cluster 
+        uses: Azure/k8s-deploy@v4
         with:
          namespace: 'foundation-production'
          manifests: |

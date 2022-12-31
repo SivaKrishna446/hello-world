@@ -70,7 +70,8 @@ jobs:
         with:
          namespace: 'foundation-production'
          manifests: |
-           dir/deployment
+           deployment/deployment.yaml
+           deployment/service.yaml
          images: 'found.jfrog.io/docker/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}'
          imagepullsecrets: |
            artifactory-image-pull-secret

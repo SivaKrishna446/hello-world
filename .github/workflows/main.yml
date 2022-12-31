@@ -57,10 +57,11 @@ jobs:
         id: setcontext
         
       - name: Creating image pull secret
-        uses: Azure/k8s-create-secret@v1.1
+        uses: Azure/k8s-create-secret@v4
         with:
-          container-registry-url: sivaeastus.azurecr.io
-          container-registry-username: ${{ secrets.AZURE_CLIENT_ID }}
-          container-registry-password: ${{ secrets.AZURE_CLIENT_SECRET }}
-          secret-name: image-pull-secret
-        
+          namespace: foundation-production
+          container-registry-url: found.jfrog.io
+          container-registry-username: ${{ secrets.JF_USERNAME }}
+          container-registry-password: ${{ secrets.JF_PASSWORD }}
+          secret-name: artifactory-image-pull-secret
+        id: create-secret

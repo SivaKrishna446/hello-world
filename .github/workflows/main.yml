@@ -1,5 +1,5 @@
-name: ci
-run-name: Build Job
+name: Pipeline
+run-name: Build and deploy
 on: [push]
 env:
   IMAGE_NAME: hello-world
@@ -65,3 +65,12 @@ jobs:
           container-registry-password: ${{ secrets.JF_PASSWORD }}
           secret-name: artifactory-image-pull-secret
         id: create-secret
+        
+      - uses: Azure/k8s-deploy@v4
+        with:
+         namespace: 'foundation-production'
+         manifests: |
+           dir/deployment
+         images: 'found.jfrog.io/docker/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}'
+         imagepullsecrets: |
+           artifactory-image-pull-secret

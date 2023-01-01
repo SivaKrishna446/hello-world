@@ -36,7 +36,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: found.jfrog.io/docker/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          tags: found.jfrog.io/docker/{{ github.event.repository.name }}:{{ github.sha }}
          
  
   deployment:
@@ -76,6 +76,6 @@ jobs:
          manifests: |
            deployment/deployment.yaml
            deployment/service.yaml
-         images: 'found.jfrog.io/docker/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}'
+         images: 'found.jfrog.io/docker/{{ github.event.repository.name }}:{{ github.sha }}'
          imagepullsecrets: |
            artifactory-image-pull-secret

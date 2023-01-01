@@ -79,5 +79,5 @@ jobs:
          imagepullsecrets: |
            artifactory-image-pull-secret
          strategy: canary
-         action: deploy
+         action: promote
          percentage: 30

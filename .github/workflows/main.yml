@@ -1,9 +1,6 @@
 name: Pipeline
 run-name: Build and deploy
 on: [push]
-env:
-  IMAGE_NAME: hello-world
-  IMAGE_TAG: 1.0.3
 jobs:
   npm-build:
     runs-on: ubuntu-latest
@@ -79,3 +76,6 @@ jobs:
          images: 'found.jfrog.io/docker/{{ github.event.repository.name }}:{{ github.sha }}'
          imagepullsecrets: |
            artifactory-image-pull-secret
+         strategy: canary
+         action: deploy
+         percentage: 30

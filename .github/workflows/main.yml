@@ -75,7 +75,7 @@ jobs:
          manifests: |
            deployment/deployment.yaml
            deployment/service.yaml
-         images: 'found.jfrog.io/docker/{{ github.event.repository.name }}:{{ github.sha }}'
+         images: 'found.jfrog.io/docker/${{ github.event.repository.name }}:${{ github.sha }}'
          imagepullsecrets: |
            artifactory-image-pull-secret
          strategy: canary

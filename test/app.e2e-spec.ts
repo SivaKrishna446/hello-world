@@ -19,6 +19,6 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
-      .expect('This is Jetblue Foundation Hello World App');
+      .expect('Hello World!');
   });
 });

@@ -68,16 +68,34 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v3
         
-      - name: Deploy to Kubernetes cluster 
-        uses: Azure/k8s-deploy@v4
+      # - name: Deploy to Kubernetes cluster 
+      #   uses: Azure/k8s-deploy@v4
+      #   with:
+      #    namespace: 'foundation-production'
+      #    manifests: |
+      #      deployment/deployment.yaml
+      #      deployment/service.yaml
+      #    images: 'found.jfrog.io/docker/${{ github.event.repository.name }}:${{ github.sha }}'
+      #    imagepullsecrets: |
+      #      artifactory-image-pull-secret
+      #    strategy: canary
+      #    action: deploy
+      #    percentage: 30
+      - name: 'Deploy'
+        uses: 'deliverybot/helm@v1'
         with:
-         namespace: 'foundation-production'
-         manifests: |
-           deployment/deployment.yaml
-           deployment/service.yaml
-         images: 'found.jfrog.io/docker/${{ github.event.repository.name }}:${{ github.sha }}'
-         imagepullsecrets: |
-           artifactory-image-pull-secret
-         strategy: canary
-         action: deploy
-         percentage: 30
+          release: 'hello-world'
+          namespace: 'foundation-production'
+          chart: 'hello-world'
+          values: |
+            name: hello-world
+            replicas: 3
+            app: hello-world
+            port: 8080
+            artifactoryUrl: "found.jfrog.io"
+            dockerRepository: docker
+            serviceName: ${{ github.event.repository.name }}
+            serviceTag: ${{ github.sha }}
+            serviceType: LoadBalancer
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBE_CONFIG }}'

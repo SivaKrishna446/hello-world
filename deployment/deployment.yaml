@@ -2,21 +2,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hello-world
+  name: {{ .Values.name }}
   labels:
-    app: hello-world
+    app: {{ .Values.app }}
 spec:
-  replicas: 3
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      app: hello-world
+      app: {{ .Values.app }}
   template:
     metadata:
       labels:
-        app: hello-world
+        app: {{ .Values.app }}
     spec:
       containers:
-      - name: node
-        image: found.jfrog.io/docker/hello-world:1.0.0
+      - name: {{ .Values.name }}
+        image: "{{ .Values.artifactoryUrl }}/{{ .Values.dockerRepository }}/{{ .Values.serviceName }}:{{ .Values.serviceTag }}"
         ports:
-        - containerPort: 8080
+        - containerPort: {{ .Values.port }}

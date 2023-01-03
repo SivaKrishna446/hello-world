@@ -16,7 +16,7 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('This is Jetblue Foundation Hello World App V3');
+      expect(appController.getHello()).toBe('This is Jetblue Foundation Hello World App V4');
     });
   });
 });

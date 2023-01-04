@@ -84,7 +84,7 @@ jobs:
       - name: 'Deploy'
         uses: 'glopezep/helm@v1.7.1'
         with:
-          release: 'hello-world'
+          release: 'foundation-hello-world'
           namespace: 'foundation-production'
           chart: 'hello-world'
           helm: helm3
@@ -98,5 +98,8 @@ jobs:
             serviceName: ${{ github.event.repository.name }}
             serviceTag: ${{ github.sha }}
             serviceType: LoadBalancer
+          repo: 'https://found.jfrog.io/artifactory/foundation-helm/hello-world'
+          repo-username: ${{ secrets.JF_USERNAME }}
+          repo-password: ${{ secrets.JF_PASSWORD }}
         env:
           KUBECONFIG_FILE: '${{ secrets.KUBE_CONFIG }}'

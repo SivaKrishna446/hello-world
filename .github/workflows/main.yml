@@ -87,6 +87,7 @@ jobs:
           release: 'hello-world'
           namespace: 'foundation-production'
           chart: 'hello-world'
+          helm: helm3
           values: |
             name: hello-world
             replicas: 3

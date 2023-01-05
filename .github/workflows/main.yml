@@ -34,7 +34,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: found.jfrog.io/docker/${{ github.event.repository.name }}:${{ github.sha }}
+          tags: artifactory.it.jetblue.com/b6-foundation-docker-production/${{ github.event.repository.name }}:${{ github.sha }}
          
  
   deployment:
@@ -68,38 +68,38 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v3
         
-      # - name: Deploy to Kubernetes cluster 
-      #   uses: Azure/k8s-deploy@v4
-      #   with:
-      #    namespace: 'foundation-production'
-      #    manifests: |
-      #      deployment/deployment.yaml
-      #      deployment/service.yaml
-      #    images: 'found.jfrog.io/docker/${{ github.event.repository.name }}:${{ github.sha }}'
-      #    imagepullsecrets: |
-      #      artifactory-image-pull-secret
-      #    strategy: canary
-      #    action: deploy
-      #    percentage: 30
-      - name: 'Deploy'
-        uses: 'glopezep/helm@v1.7.1'
+      - name: Deploy to Kubernetes cluster 
+        uses: Azure/k8s-deploy@v4
         with:
-          release: 'foundation-hello-world'
-          namespace: 'foundation-production'
-          chart: 'hello-world'
-          helm: helm3
-          values: |
-            name: hello-world
-            replicas: 3
-            app: hello-world
-            port: 8080
-            artifactoryUrl: "found.jfrog.io"
-            dockerRepository: docker
-            serviceName: ${{ github.event.repository.name }}
-            serviceTag: ${{ github.sha }}
-            serviceType: LoadBalancer
-          repo: 'https://found.jfrog.io/artifactory/foundation-helm/hello-world'
-          repo-username: ${{ secrets.JF_USERNAME }}
-          repo-password: ${{ secrets.JF_PASSWORD }}
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBE_CONFIG }}'
+         namespace: 'foundation-production'
+         manifests: |
+           deployment/deployment.yaml
+           deployment/service.yaml
+         images: 'found.jfrog.io/docker/${{ github.event.repository.name }}:${{ github.sha }}'
+         imagepullsecrets: |
+           artifactory-image-pull-secret
+         strategy: canary
+         action: deploy
+         percentage: 30
+#       - name: 'Deploy'
+#         uses: 'glopezep/helm@v1.7.1'
+#         with:
+#           release: 'foundation-hello-world'
+#           namespace: 'foundation-production'
+#           chart: 'hello-world'
+#           helm: helm3
+#           values: |
+#             name: hello-world
+#             replicas: 3
+#             app: hello-world
+#             port: 8080
+#             artifactoryUrl: "found.jfrog.io"
+#             dockerRepository: docker
+#             serviceName: ${{ github.event.repository.name }}
+#             serviceTag: ${{ github.sha }}
+#             serviceType: LoadBalancer
+#           repo: 'https://found.jfrog.io/artifactory/foundation-helm/hello-world'
+#           repo-username: ${{ secrets.JF_USERNAME }}
+#           repo-password: ${{ secrets.JF_PASSWORD }}
+#         env:
+#           KUBECONFIG_FILE: '${{ secrets.KUBE_CONFIG }}'

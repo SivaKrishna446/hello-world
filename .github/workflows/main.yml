@@ -26,7 +26,7 @@ jobs:
       - name: Login to Jfrog Artifactory
         uses: docker/login-action@v2
         with:
-          registry: found.jfrog.io
+          registry: artifactory.it.jetblue.com
           username: ${{ secrets.JF_USERNAME }}
           password: ${{ secrets.JF_PASSWORD }}
           
@@ -75,7 +75,7 @@ jobs:
          manifests: |
            deployment/deployment.yaml
            deployment/service.yaml
-         images: 'found.jfrog.io/docker/${{ github.event.repository.name }}:${{ github.sha }}'
+         images: 'artifactory.it.jetblue.com/b6-foundation-docker-production/${{ github.event.repository.name }}:${{ github.sha }}'
          imagepullsecrets: |
            artifactory-image-pull-secret
          strategy: canary

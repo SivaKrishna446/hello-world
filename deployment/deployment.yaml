@@ -1,22 +1,45 @@
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: {{ .Values.name }}
+#   labels:
+#     app: {{ .Values.app }}
+# spec:
+#   replicas: {{ .Values.replicas }}
+#   selector:
+#     matchLabels:
+#       app: {{ .Values.app }}
+#   template:
+#     metadata:
+#       labels:
+#         app: {{ .Values.app }}
+#     spec:
+#       containers:
+#       - name: {{ .Values.name }}
+#         image: "{{ .Values.artifactoryUrl }}/{{ .Values.dockerRepository }}/{{ .Values.serviceName }}:{{ .Values.serviceTag }}"
+#         ports:
+#         - containerPort: {{ .Values.port }}
+
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.name }}
+  name: hello-world
   labels:
-    app: {{ .Values.app }}
+    app: hello-world
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: 3
   selector:
     matchLabels:
-      app: {{ .Values.app }}
+      app: hello-world
   template:
     metadata:
       labels:
-        app: {{ .Values.app }}
+        app: hello-world
     spec:
       containers:
-      - name: {{ .Values.name }}
-        image: "{{ .Values.artifactoryUrl }}/{{ .Values.dockerRepository }}/{{ .Values.serviceName }}:{{ .Values.serviceTag }}"
+      - name: hello-world
+        image: "artifactory.it.jetblue.com/b6-foundation-docker-production/hello-world:1.0.0"
         ports:
-        - containerPort: {{ .Values.port }}
+        - containerPort: 8080

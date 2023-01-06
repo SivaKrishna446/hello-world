@@ -34,7 +34,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: artifactory.it.jetblue.com/b6-foundation-docker-production/${{ github.event.repository.name }}:${{ github.sha }}
+          tags: found.jfrog.io/docker/${{ github.event.repository.name }}:${{ github.sha }}
          
  
   deployment:

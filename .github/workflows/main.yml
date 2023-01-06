@@ -75,12 +75,13 @@ jobs:
          manifests: |
            deployment/deployment.yaml
            deployment/service.yaml
-         images: 'artifactory.it.jetblue.com/b6-foundation-docker-production/${{ github.event.repository.name }}:${{ github.sha }}'
+         images: 'found.jfrog.io/docker/${{ github.event.repository.name }}:${{ github.sha }}'
          imagepullsecrets: |
            artifactory-image-pull-secret
          strategy: canary
          action: deploy
          percentage: 30
+
 #       - name: 'Deploy'
 #         uses: 'glopezep/helm@v1.7.1'
 #         with:

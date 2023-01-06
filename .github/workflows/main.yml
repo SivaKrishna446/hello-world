@@ -9,9 +9,21 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
+      - name: Running the npm intall
+        run: npm ci
+
+      - name: Compile the application
+        run: npm run build --if-present
+
+      - name: Running the unit tests
+        run: npm test
+
+      - name: SonarQube Scan
+        uses: kitabisa/sonarqube-action@v1.2.0
+        with:
+          host: ${{ secrets.SONARQUBE_HOST }}
+          login: ${{ secrets.SONARQUBE_TOKEN }}
+
   docker:
     needs: npm-build
     runs-on: ubuntu-latest

@@ -40,6 +40,6 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: "artifactory.it.jetblue.com/b6-foundation-docker-production/hello-world:1.0.0"
+        image: "found.jfrog.io/docker/hello-world:1.0.0"
         ports:
         - containerPort: 8080

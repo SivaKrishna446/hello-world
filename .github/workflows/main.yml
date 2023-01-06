@@ -26,7 +26,7 @@ jobs:
       - name: Login to Jfrog Artifactory
         uses: docker/login-action@v2
         with:
-          registry: artifactory.it.jetblue.com
+          registry: found.jfrog.io
           username: ${{ secrets.JF_USERNAME }}
           password: ${{ secrets.JF_PASSWORD }}
           

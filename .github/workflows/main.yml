@@ -1,8 +1,14 @@
 name: Pipeline
 run-name: Build and deploy
 on: [push]
+env:
+  ARTIFACTORY_URL: found.jfrog.io
+  DOCKER_REPO_NAME: docker
+  NAME_SPACE: foundation-production
+  IMAGE_PULL_SECRET: artifactory-image-pull-secret
+
 jobs:
-  build:
+  npm-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checking out the repo
@@ -32,10 +38,10 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
       - name: Changing project from default to foundation quality gate
-        run: curl -u '${{ secrets.SONAR_TOKEN }}:' -X POST "https://sonarqube.it.jetblue.com/api/qualitygates/select?gateName=Foundation&projectKey=hello-world"
+        run: curl -u '${{ secrets.SONAR_TOKEN }}:' -X POST "${{ secrets.SONAR_HOST_URL }}/api/qualitygates/select?gateName=Foundation&projectKey=${{ github.event.repository.name }}"
 
       - name: Changing project from default to foundation quality profile
-        run: curl -u '${{ secrets.SONAR_TOKEN }}:' -X POST "https://sonarqube.it.jetblue.com/api/qualityprofiles/add_project?language=ts&project=hello-world&qualityProfile=Foundation"
+        run: curl -u '${{ secrets.SONAR_TOKEN }}:' -X POST "${{ secrets.SONAR_HOST_URL }}/api/qualityprofiles/add_project?language=ts&project=${{ github.event.repository.name }}&qualityProfile=Foundation"
 
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
@@ -45,8 +51,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-  package:
-    needs: build
+  docker:
+    needs: npm-build
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -58,7 +64,7 @@ jobs:
       - name: Login to Jfrog Artifactory
         uses: docker/login-action@v2
         with:
-          registry: found.jfrog.io
+          registry: ${{ env.ARTIFACTORY_URL }}
           username: ${{ secrets.JF_USERNAME }}
           password: ${{ secrets.JF_PASSWORD }}
           
@@ -66,11 +72,11 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: found.jfrog.io/docker/${{ github.event.repository.name }}:${{ github.sha }}
+          tags: ${{ env.ARTIFACTORY_URL }}/${{env.DOCKER_REPO_NAME}}/${{ github.event.repository.name }}:${{ github.sha }}
          
  
   deployment:
-    needs: [build, package]
+    needs: [npm-build, docker]
     runs-on: ubuntu-latest
     steps:
       - name: Installing Kubectl 
@@ -90,11 +96,11 @@ jobs:
       - name: Creating image pull secret
         uses: Azure/k8s-create-secret@v4
         with:
-          namespace: foundation-production
-          container-registry-url: found.jfrog.io
+          namespace: ${{ env.NAME_SPACE }}
+          container-registry-url: ${{ env.ARTIFACTORY_URL }}
           container-registry-username: ${{ secrets.JF_USERNAME }}
           container-registry-password: ${{ secrets.JF_PASSWORD }}
-          secret-name: artifactory-image-pull-secret
+          secret-name: ${{ env.IMAGE_PULL_SECRET }}
         id: create-secret
         
       - name: Checkout the repo
@@ -107,9 +113,9 @@ jobs:
          manifests: |
            deployment/deployment.yaml
            deployment/service.yaml
-         images: 'found.jfrog.io/docker/${{ github.event.repository.name }}:${{ github.sha }}'
+         images: '${{ env.ARTIFACTORY_URL }}/${{env.DOCKER_REPO_NAME}}/${{ github.event.repository.name }}:${{ github.sha }}'
          imagepullsecrets: |
-           artifactory-image-pull-secret
+           ${{ env.IMAGE_PULL_SECRET  }}
          strategy: canary
          action: deploy
          percentage: 30
@@ -126,12 +132,12 @@ jobs:
 #             replicas: 3
 #             app: hello-world
 #             port: 8080
-#             artifactoryUrl: "found.jfrog.io"
+#             artifactoryUrl: '${{ env.ARTIFACTORY_URL }}'
 #             dockerRepository: docker
 #             serviceName: ${{ github.event.repository.name }}
 #             serviceTag: ${{ github.sha }}
 #             serviceType: LoadBalancer
-#           repo: 'https://found.jfrog.io/artifactory/foundation-helm/hello-world'
+#           repo: '${{ env.ARTIFACTORY_URL }}/artifactory/foundation-helm/hello-world'
 #           repo-username: ${{ secrets.JF_USERNAME }}
 #           repo-password: ${{ secrets.JF_PASSWORD }}
 #         env:

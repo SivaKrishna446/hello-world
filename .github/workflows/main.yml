@@ -35,7 +35,7 @@ jobs:
         run: curl -u '${{ secrets.SONAR_TOKEN }}:' -X POST "https://sonarqube.it.jetblue.com/api/qualitygates/select?gateName=Foundation&projectKey=hello-world"
 
       - name: Changing project from default to foundation quality profile
-        run: curl -u '${{ secrets.SONAR_TOKEN }}:' -X POST "https://sonarqube.it.jetblue.com/api/qualityprofiles/add_project?language=js&project=hello-world&qualityProfile=Foundation&"
+        run: curl -u '${{ secrets.SONAR_TOKEN }}:' -X POST "https://sonarqube.it.jetblue.com/api/qualityprofiles/add_project?language=ts&project=hello-world&qualityProfile=Foundation"
 
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check

@@ -2,7 +2,7 @@ name: Pipeline
 run-name: Build and deploy
 on: [push]
 jobs:
-  npm-build:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checking out the repo
@@ -19,6 +19,12 @@ jobs:
       - name: Compile the application
         run: npm run build --if-present
 
+      - name: Running the linting
+        run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
       - name: Running unit tests & generating coverage report
         run: npm test & npm run test:cov --if-present
 
@@ -28,8 +34,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      - name: Set project from default QG to foundation QG
-        run: curl -u '${{ secrets.SONAR_TOKEN }}:' -X POST "https://sonarqube.it.jetblue.com/api/qualitygates/select?gateName=Foundation-Quality-Gate&projectKey=hello-world"
+      - name: Changing project from default to foundation quality gate
+        run: curl -u '${{ secrets.SONAR_TOKEN }}:' -X POST "https://sonarqube.it.jetblue.com/api/qualitygates/select?gateName=Foundation&projectKey=hello-world"
+
+      - name: Changing project from default to foundation quality profile
+        run: curl -u '${{ secrets.SONAR_TOKEN }}:' -X POST "https://sonarqube.it.jetblue.com/api/qualityprofiles/add_project?language=js&project=hello-world&qualityProfile=Foundation&"
 
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
@@ -39,15 +48,14 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-  docker:
-    needs: npm-build
+  package:
+    needs: [build, test]
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Set up QEMU
+      - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
+
+      - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2 
        
       - name: Login to Jfrog Artifactory
@@ -65,7 +73,7 @@ jobs:
          
  
   deployment:
-    needs: [npm-build, docker]
+    needs: [build, test, package]
     runs-on: ubuntu-latest
     steps:
       - name: Installing Kubectl 

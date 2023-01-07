@@ -112,13 +112,14 @@ jobs:
           renderEngine: 'helm'
           helmChart: './helm/'
           overrides: |
-            replicas: 3
-            name: hello-world
-            app: hello-world
-            artifactoryUrl: '${{ env.ARTIFACTORY_URL }}'
+            replicas:3
+            name:hello-world
+            app:hello-world
+            artifactoryUrl:'${{ env.ARTIFACTORY_URL }}'
             dockerRepository:${{ env.DOCKER_REPO_NAME }}
-            imageTag: ${{ github.sha }}
-            serviceType: LoadBalancer
+            imageTag:${{ github.sha }}
+            serviceType:LoadBalancer
+            port: 8080
           helm-version: 'latest'
         id: bake
 

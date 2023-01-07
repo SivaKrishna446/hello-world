@@ -106,6 +106,31 @@ jobs:
       - name: Checkout the repo
         uses: actions/checkout@v3
         
+      - name: Using helm to render the templates
+        uses: azure/k8s-bake@v2.2
+        with:
+          renderEngine: 'helm'
+          helmChart: './helm/'
+          overrides: |
+            replicas: 3
+            name: hello-world
+            app: hello-world
+            artifactoryUrl: '${{ env.ARTIFACTORY_URL }}'
+            dockerRepository:${{ env.DOCKER_REPO_NAME }}
+            imageTag: ${{ github.sha }}
+            serviceType: LoadBalancer
+          helm-version: 'latest'
+        id: bake
+
+      - uses: Azure/k8s-deploy@v4
+        with:
+          namespace: 'foundation-production'
+          manifests: ${{ steps.bake.outputs.manifestsBundle }}
+          images: |
+              '${{ env.ARTIFACTORY_URL }}/${{env.DOCKER_REPO_NAME}}/${{ github.event.repository.name }}:${{ github.sha }}'
+          imagepullsecrets: |
+              ${{ env.IMAGE_PULL_SECRET  }}
+
       # - name: Deploy to Kubernetes cluster 
       #   uses: Azure/k8s-deploy@v4
       #   with:
@@ -119,26 +144,3 @@ jobs:
       #    strategy: canary
       #    action: deploy
       #    percentage: 30
-
-      - name: 'Deploy'
-        uses: 'glopezep/helm@v1.7.1'
-        with:
-          release: 'foundation-hello-world'
-          namespace: 'foundation-production'
-          chart: 'hello-world'
-          helm: helm3
-          values: |
-            name: hello-world
-            replicas: 3
-            app: hello-world
-            port: 8080
-            artifactoryUrl: '${{ env.ARTIFACTORY_URL }}'
-            dockerRepository:${{ env.DOCKER_REPO_NAME }}
-            serviceName: ${{ github.event.repository.name }}
-            serviceTag: ${{ github.sha }}
-            serviceType: LoadBalancer
-          repo: '${{ env.ARTIFACTORY_URL }}/artifactory/foundation-helm/hello-world'
-          repo-username: ${{ secrets.JF_USERNAME }}
-          repo-password: ${{ secrets.JF_PASSWORD }}
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBE_CONFIG }}'

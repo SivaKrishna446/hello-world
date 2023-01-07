@@ -21,15 +21,15 @@ jobs:
 
       - name: Running the linting
         run: npm run lint
+      
+      - name: Running unit tests & generating coverage report
+        run: npm test & npm run test:cov --if-present
 
-  test:
+  sonarqube:
     runs-on: ubuntu-latest
     steps:
       - name: Checking out the repo
         uses: actions/checkout@v3
-        
-      - name: Running unit tests & generating coverage report
-        run: npm test & npm run test:cov --if-present
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master
@@ -52,7 +52,7 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
   package:
-    needs: [build, test]
+    needs: [build, sonarqube]
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -76,7 +76,7 @@ jobs:
          
  
   deployment:
-    needs: [build, test, package]
+    needs: [build, sonarqube, package]
     runs-on: ubuntu-latest
     steps:
       - name: Installing Kubectl 

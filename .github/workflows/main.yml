@@ -28,6 +28,15 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
+      - name: Set project from default QG to foundation QG
+        uses: indiesdev/curl@v1.1
+        id: api
+        with:
+          url: "https://sonarqube.it.jetblue.com/api/qualitygates/select?gateName=Foundation-Quality-Gate&projectKey=hello-world"
+          method: "POST"
+          log-response: true
+          bearer-token: ${{ secrets.SONAR_TOKEN }}
+
       - name: SonarQube Quality Gate check
         id: sonarqube-quality-gate-check
         uses: sonarsource/sonarqube-quality-gate-action@master

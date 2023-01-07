@@ -25,6 +25,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: Checking out the repo
+        uses: actions/checkout@v3
+        
       - name: Running unit tests & generating coverage report
         run: npm test & npm run test:cov --if-present
 

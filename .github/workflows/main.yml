@@ -115,8 +115,9 @@ jobs:
             replicas:3
             name:hello-world
             app:hello-world
-            artifactoryUrl:'${{ env.ARTIFACTORY_URL }}'
+            artifactoryUrl:${{ env.ARTIFACTORY_URL }}
             dockerRepository:${{ env.DOCKER_REPO_NAME }}
+            serviceName:${{ github.event.repository.name }}
             imageTag:${{ github.sha }}
             serviceType:LoadBalancer
             port: 8080
@@ -128,7 +129,7 @@ jobs:
           namespace: 'foundation-production'
           manifests: ${{ steps.bake.outputs.manifestsBundle }}
           images: |
-              '${{ env.ARTIFACTORY_URL }}/${{env.DOCKER_REPO_NAME}}/${{ github.event.repository.name }}:${{ github.sha }}'
+              ${{ env.ARTIFACTORY_URL }}/${{env.DOCKER_REPO_NAME}}/${{ github.event.repository.name }}:${{ github.sha }}
           imagepullsecrets: |
               ${{ env.IMAGE_PULL_SECRET  }}
 

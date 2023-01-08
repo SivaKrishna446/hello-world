@@ -119,7 +119,6 @@ jobs:
             dockerRepository:${{ env.DOCKER_REPO_NAME }}
             serviceName:${{ github.event.repository.name }}
             imageTag:${{ github.sha }}
-            serviceType:LoadBalancer
             port: 8080
             tlsHostName:jb-${{ github.event.repository.name }}.eastus.cloudapp.azure.com
             tlsSecret: tls-secret

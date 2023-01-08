@@ -13,7 +13,7 @@ metadata:
     gitRepoName: {{ .Values.gitRepo}}
     gitOrgName: {{ .Values.gitOrgName}}
 spec:
-  type: {{ .Values.serviceType | ClusterIP }}
+  type: {{ .Values.serviceType | default ClusterIP }}
   selector:
     app: {{ .Values.app }}
   ports:

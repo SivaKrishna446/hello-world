@@ -3,10 +3,19 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ .Values.name }}
+  labels:
+    app: {{ .Values.app }}
+    version: {{ .Values.appVersion}}
+    chart: {{ .Values.chart }}
+    releaseName: {{ .Values.relaeseName}}
+    commitId: {{ .Values.commitId}}
+    gitBranch: {{ .Values.gitBranch }}
+    gitRepoName: {{ .Values.gitRepo}}
+    gitOrgName: {{ .Values.gitOrgName}}
 spec:
-  type: {{ .Values.serviceType }}
+  type: {{ .Values.serviceType | ClusterIP }}
   selector:
     app: {{ .Values.app }}
   ports:
     - protocol: TCP
-      port: {{ .Values.port }}
+      port: {{ .Values.port | default 8080 }}

@@ -5,6 +5,13 @@ metadata:
   name: {{ .Values.name }}
   labels:
     app: {{ .Values.app }}
+    version: {{ .Values.appVersion}}
+    chart: {{ .Values.chart }}
+    releaseName: {{ .Values.relaeseName}}
+    commitId: {{ .Values.commitId}}
+    gitBranch: {{ .Values.gitBranch }}
+    gitRepoName: {{ .Values.gitRepo}}
+    gitOrgName: {{ .Values.gitOrgName}}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
@@ -14,9 +21,16 @@ spec:
     metadata:
       labels:
         app: {{ .Values.app }}
+        version: {{ .Values.appVersion}}
+        chart: {{ .Values.chart }}
+        releaseName: {{ .Values.relaeseName}}
+        commitId: {{ .Values.commitId}}
+        gitBranch: {{ .Values.gitBranch }}
+        gitRepoName: {{ .Values.gitRepo}}
+        gitOrgName: {{ .Values.gitOrgName}}
     spec:
       containers:
       - name: {{ .Values.name }}
         image: "{{ .Values.artifactoryUrl }}/{{ .Values.dockerRepository }}/{{ .Values.serviceName }}:{{ .Values.imageTag }}"
         ports:
-        - containerPort: {{ .Values.port }}
+        - containerPort: {{ .Values.port | default 8080}}

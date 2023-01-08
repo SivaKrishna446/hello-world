@@ -121,6 +121,15 @@ jobs:
             imageTag:${{ github.sha }}
             serviceType:LoadBalancer
             port: 8080
+            tlsHostName:jb-${{ github.event.repository.name }}.eastus.cloudapp.azure.com
+            tlsSecret: tls-secret
+            appVersion:1.0.0
+            chart:${{ github.event.repository.name }}
+            releaseName:${{ github.event.repository.name }}
+            commitId:${{ github.sha }}
+            gitBranch:${{ github.ref_name }}
+            gitRepoName:${{ github.repository }}
+            gitOrgName:${{ github.repository_owner }}
           helm-version: 'latest'
         id: bake
 

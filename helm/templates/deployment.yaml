@@ -7,7 +7,7 @@ metadata:
     app: {{ .Values.app }}
     version: {{ .Values.appVersion}}
     chart: {{ .Values.chart }}
-    releaseName: {{ .Values.relaeseName}}
+    releaseName: {{ .Values.releaseName}}
     commitId: {{ .Values.commitId}}
     gitBranch: {{ .Values.gitBranch }}
     gitRepoName: {{ .Values.gitRepoName}}
@@ -26,7 +26,7 @@ spec:
         releaseName: {{ .Values.releaseName}}
         commitId: {{ .Values.commitId}}
         gitBranch: {{ .Values.gitBranch }}
-        gitRepoName: {{ .Values.gitRepo}}
+        gitRepoName: {{ .Values.gitRepoName}}
         gitOrgName: {{ .Values.gitOrgName}}
     spec:
       containers:

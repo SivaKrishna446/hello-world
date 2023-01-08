@@ -6,10 +6,10 @@ metadata:
     app: {{ .Values.app }}
     version: {{ .Values.appVersion}}
     chart: {{ .Values.chart }}
-    releaseName: {{ .Values.relaeseName}}
+    releaseName: {{ .Values.releaseName}}
     commitId: {{ .Values.commitId}}
     gitBranch: {{ .Values.gitBranch }}
-    gitRepoName: {{ .Values.gitRepo}}
+    gitRepoName: {{ .Values.gitRepoName}}
     gitOrgName: {{ .Values.gitOrgName}}
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"

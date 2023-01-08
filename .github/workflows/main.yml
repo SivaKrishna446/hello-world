@@ -127,7 +127,7 @@ jobs:
             releaseName:${{ github.event.repository.name }}
             commitId:${{ github.sha }}
             gitBranch:${{ github.ref_name }}
-            gitRepoName:${{ github.repository }}
+            gitRepoName:${{ github.event.repository.name }}
             gitOrgName:${{ github.repository_owner }}
           helm-version: 'latest'
         id: bake

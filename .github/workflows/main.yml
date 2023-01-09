@@ -134,23 +134,12 @@ jobs:
 
       - uses: Azure/k8s-deploy@v4
         with:
-          namespace: 'foundation-production'
+          namespace: ${{ env.NAME_SPACE }}
           manifests: ${{ steps.bake.outputs.manifestsBundle }}
           images: |
               ${{ env.ARTIFACTORY_URL }}/${{env.DOCKER_REPO_NAME}}/${{ github.event.repository.name }}:${{ github.sha }}
           imagepullsecrets: |
               ${{ env.IMAGE_PULL_SECRET  }}
-
-      # - name: Deploy to Kubernetes cluster 
-      #   uses: Azure/k8s-deploy@v4
-      #   with:
-      #    namespace: 'foundation-production'
-      #    manifests: |
-      #      deployment/deployment.yaml
-      #      deployment/service.yaml
-      #    images: '${{ env.ARTIFACTORY_URL }}/${{env.DOCKER_REPO_NAME}}/${{ github.event.repository.name }}:${{ github.sha }}'
-      #    imagepullsecrets: |
-      #      ${{ env.IMAGE_PULL_SECRET  }}
-      #    strategy: canary
-      #    action: deploy
-      #    percentage: 30
+          strategy: canary
+          action: promote
+          percentage: 30

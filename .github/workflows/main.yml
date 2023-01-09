@@ -13,6 +13,8 @@ env:
 jobs:
   npm-build:
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag_version.outputs.new_tag }}
     steps:
       - name: Checking out the repo
         uses: actions/checkout@v3
@@ -89,7 +91,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ${{ env.ARTIFACTORY_URL }}/${{env.DOCKER_REPO_NAME}}/${{ github.event.repository.name }}:${{ steps.tag_version.outputs.new_tag }}
+          tags: ${{ env.ARTIFACTORY_URL }}/${{env.DOCKER_REPO_NAME}}/${{ github.event.repository.name }}:${{ tag }}
          
  
   deployment:
@@ -135,11 +137,11 @@ jobs:
             artifactoryUrl:${{ env.ARTIFACTORY_URL }}
             dockerRepository:${{ env.DOCKER_REPO_NAME }}
             serviceName:${{ github.event.repository.name }}
-            imageTag:${{ steps.tag_version.outputs.new_tag }}
+            imageTag:${{ tag }}
             port: 8080
             tlsHostName:jb-${{ github.event.repository.name }}.eastus.cloudapp.azure.com
             tlsSecret: tls-secret
-            appVersion:${{ steps.tag_version.outputs.new_tag }}
+            appVersion:${{ tag }}
             chart:${{ github.event.repository.name }}
             releaseName:${{ github.event.repository.name }}
             commitId:${{ github.sha }}
@@ -154,7 +156,7 @@ jobs:
           namespace: ${{ env.NAME_SPACE }}
           manifests: ${{ steps.bake.outputs.manifestsBundle }}
           images: |
-              ${{ env.ARTIFACTORY_URL }}/${{env.DOCKER_REPO_NAME}}/${{ github.event.repository.name }}:${{ steps.tag_version.outputs.new_tag }}
+              ${{ env.ARTIFACTORY_URL }}/${{env.DOCKER_REPO_NAME}}/${{ github.event.repository.name }}:${{ tag }}
           imagepullsecrets: |
               ${{ env.IMAGE_PULL_SECRET  }}
           strategy: canary

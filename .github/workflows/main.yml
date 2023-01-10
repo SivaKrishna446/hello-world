@@ -160,5 +160,5 @@ jobs:
           imagepullsecrets: |
               ${{ env.IMAGE_PULL_SECRET  }}
           strategy: canary
-          action: deploy
+          action: promote
           percentage: 30

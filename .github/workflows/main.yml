@@ -160,5 +160,16 @@ jobs:
           imagepullsecrets: |
               ${{ env.IMAGE_PULL_SECRET  }}
           strategy: canary
-          action: promote
+          action: deploy
           percentage: 30
+              
+          
+      - uses: Azure/k8s-deploy@v4
+        with:
+          namespace: ${{ env.NAME_SPACE }}
+          manifests: ${{ steps.bake.outputs.manifestsBundle }}
+          images: |
+              ${{ env.ARTIFACTORY_URL }}/${{env.DOCKER_REPO_NAME}}/${{ github.event.repository.name }}:${{ needs.npm-build.outputs.tag}}
+          imagepullsecrets: |
+              ${{ env.IMAGE_PULL_SECRET  }}
+          action: promote

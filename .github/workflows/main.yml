@@ -10,6 +10,7 @@ env:
   NAME_SPACE: foundation-production
   IMAGE_PULL_SECRET: artifactory-image-pull-secret
   HELM_REPO_NAME: b6-foundation-helm-local
+  KUBE_CONTEXT: foundation-production-admin
 
 jobs:
   npm-build:
@@ -110,7 +111,7 @@ jobs:
         with:
           method: kubeconfig
           kubeconfig: ${{secrets.KUBE_CONFIG}}
-          context: foundation-production-admin
+          context: ${{ env.KUBE_CONTEXT }}
         id: setcontext
         
       - name: Creating image pull secret

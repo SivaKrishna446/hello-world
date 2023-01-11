@@ -9,6 +9,7 @@ env:
   DOCKER_REPO_NAME: docker
   NAME_SPACE: foundation-production
   IMAGE_PULL_SECRET: artifactory-image-pull-secret
+  HELM_REPO_NAME: b6-foundation-helm-local
 
 jobs:
   npm-build:
@@ -124,12 +125,18 @@ jobs:
         
       - name: Checkout the repo
         uses: actions/checkout@v3
-        
+
+      - name: Adding helm repo to download helm chart
+        run: |
+          helm repo add ${{ env.HELM_REPO_NAME }} https://${{env.ARTIFACTORY_URL}}/artifactory/${{ env.HELM_REPO_NAME }} --pass-credentials --username ${{ secrets.JF_USERNAME }} --password ${{ secrets.JF_PASSWORD }}
+          helm repo update
+          helm pull ${{ env.HELM_REPO_NAME }}/backend-microservice --untar
+
       - name: Using helm to render the templates
         uses: azure/k8s-bake@v2.2
         with:
           renderEngine: 'helm'
-          helmChart: './helm/'
+          helmChart: './backend-microservice/'
           overrides: |
             replicas:3
             name:hello-world
@@ -162,15 +169,3 @@ jobs:
           strategy: canary
           action: deploy
           percentage: 30
-              
-          
-      - uses: Azure/k8s-deploy@v4
-        with:
-          namespace: ${{ env.NAME_SPACE }}
-          manifests: ${{ steps.bake.outputs.manifestsBundle }}
-          images: |
-              ${{ env.ARTIFACTORY_URL }}/${{env.DOCKER_REPO_NAME}}/${{ github.event.repository.name }}:${{ needs.npm-build.outputs.tag}}
-          imagepullsecrets: |
-              ${{ env.IMAGE_PULL_SECRET  }}
-          strategy: canary
-          action: promote

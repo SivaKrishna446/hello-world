@@ -6,7 +6,7 @@ on:
       - main
 env:
   ARTIFACTORY_URL: artifactory.it.jetblue.com
-  DOCKER_REPO_NAME: docker
+  DOCKER_REPO_NAME: b6-foundation-docker-production
   NAME_SPACE: foundation-production
   IMAGE_PULL_SECRET: artifactory-image-pull-secret
   HELM_REPO_NAME: b6-foundation-helm-local

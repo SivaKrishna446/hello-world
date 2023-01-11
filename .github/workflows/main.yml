@@ -5,7 +5,7 @@ on:
     branches:
       - main
 env:
-  ARTIFACTORY_URL: found.jfrog.io
+  ARTIFACTORY_URL: artifactory.it.jetblue.com
   DOCKER_REPO_NAME: docker
   NAME_SPACE: foundation-production
   IMAGE_PULL_SECRET: artifactory-image-pull-secret
